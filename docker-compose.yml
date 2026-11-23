@@ -1,0 +1,12 @@
+services:
+  stainstorm_orchestrator_jena:
+    build: .
+    image: stainstorm_orchestrator_jena:latest
+    container_name: stainstorm_orchestrator_jena
+    ports:
+      - "${PORT:-8082}:8080"
+    volumes:
+      - ./config:/config
+    environment:
+      - ARKITEKT_DEVICE_ID=f9a2373ec8c946988681712caaf368e7
+    restart: unless-stopped

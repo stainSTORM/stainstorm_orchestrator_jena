@@ -1,0 +1,41 @@
+# StainSTORM Jena Orchestrator: Arkitekt app settings.
+# Open http://<host>:8080/ (or port 8082 with docker compose) to bind to Arkitekt
+# and edit this file in the browser. Saving there restarts the app.
+
+app: stainstorm_orchestrator_jena   # Arkitekt app identifier for this orchestrator
+
+# Target Arkitekt app identifiers of the connected robot & microscope apps
+# (Check http://<pi>/fairino/, http://<pi>/opentrons/ -> "app:" in their config.yaml,
+# and ImSwitch Arkitekt panel -> appName slug, e.g. "imswitch" or "frame-fork")
+fairino_app: fairinogale
+opentrons_app: ot2windy
+microscope_app: imswitch
+
+# Jena layout station names as configured in fairinogale/config.yaml
+# (Once jena/microscope.json is configured on the Pi, ensure "microscope" matches fairinogale/config.yaml)
+stations:
+  pickup: pickupstation
+  opentrons: opentrons
+  microscope: microscope
+
+# Protocols offered in the orchestrator dropdown (must match keys in ot2windy/config.yaml)
+protocols:
+  - staining_show
+  - staining
+  - staining_full
+  - dummy
+default_protocol: staining_show
+
+# Default Fairino movement parameters (% of max)
+speed: 20
+acceleration: 70
+danger_speed: 10
+
+# Default ImSwitch microscope parameters
+microscope:
+  scan_mode: tile_scan          # tile_scan | single_frame | none
+  move_to_loading_position: true
+  range_x_um: 1000.0
+  range_y_um: 1000.0
+  overlap_percent: 10.0
+  autofocus: false
