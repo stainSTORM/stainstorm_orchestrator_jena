@@ -22,7 +22,6 @@ import yaml
 from arkitekt import App, Description, Effects, Task
 from arkitekt.widgets import withChoices
 from arkitekt_spec.declare.definition.demands import demand
-from mikro import mikro_service
 from mikro.arkitekt.specs import MultichannelImage
 
 from arkitekt_bind import serve
@@ -37,8 +36,8 @@ if not CONFIG.exists():  # first start: copy the defaults where they can be edit
 cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8"))
 
 APP_NAME = cfg.get("app", "stainstorm_orchestrator_jena")
-FAIRINO_APP = cfg.get("fairino_app", "fairinogale")
-OPENTRONS_APP = cfg.get("opentrons_app", "ot2windy")
+FAIRINO_APP = cfg.get("fairino_app", "arkirino")
+OPENTRONS_APP = cfg.get("opentrons_app", "ot2")
 MICROSCOPE_APP = cfg.get("microscope_app", "imswitch")
 PICKUP_STATION = cfg.get("stations", {}).get("pickup", "pickupstation")
 OPENTRONS_STATION = cfg.get("stations", {}).get("opentrons", "opentrons")
@@ -56,7 +55,7 @@ DEFAULT_RANGE_Y_UM = float(MICROSCOPE_CFG.get("range_y_um", 1000.0))
 DEFAULT_OVERLAP_PERCENT = float(MICROSCOPE_CFG.get("overlap_percent", 10.0))
 DEFAULT_AUTOFOCUS = bool(MICROSCOPE_CFG.get("autofocus", False))
 
-app = App(APP_NAME, "1.0.0", effects=Effects.NONE, services=[mikro_service])
+app = App(APP_NAME, "1.0.0", effects=Effects.NONE)
 
 ProtocolChoice = Annotated[str, withChoices(*PROTOCOLS), Description("Opentrons-Protokoll aus config.yaml")]
 ScanMode = Annotated[
@@ -113,7 +112,7 @@ class FairinoArm(Protocol):
 class OpentronsOT2(Protocol):
     """Opentrons OT-2 Pipettierroboter (ot2windy)."""
 
-    def run_protocol(self, protocol: str) -> str:
+    def run_protocol(self, protocol: str) -> None:
         """Run Protocol"""
         ...
 
@@ -208,8 +207,8 @@ def run_staining_cycle(
 
     task.log(f"Schritt 4/11: Starte Opentrons-Protokoll '{protocol}' und warte auf Abschluss...")
     task.progress(30, f"Opentrons Protokoll '{protocol}' läuft")
-    run_id = opentrons.run_protocol(protocol=protocol)
-    task.log(f"Opentrons-Protokoll '{protocol}' abgeschlossen (Run-ID: {run_id}).")
+    opentrons.run_protocol(protocol=protocol)  # die Run-ID steht im Log des OT-2-Tasks
+    task.log(f"Opentrons-Protokoll '{protocol}' abgeschlossen.")
 
     task.log(f"Schritt 5/11: Hole Slice aus Station '{OPENTRONS_STATION}' ab...")
     task.progress(50, f"Abholen aus {OPENTRONS_STATION}")
@@ -286,7 +285,7 @@ def run_staining_cycle(
     task.progress(100, "Ablauf erfolgreich abgeschlossen")
     task.log(
         f"Workflow fertig! Slice ist zurück in '{PICKUP_STATION}' "
-        f"(Opentrons Run-ID: {run_id}, Mikroskop-Bilder: {len(images)})."
+        f"(Mikroskop-Bilder: {len(images)})."
     )
     return images
 
