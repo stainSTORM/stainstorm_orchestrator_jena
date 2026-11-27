@@ -5,8 +5,13 @@ description = "Arkitekt workflow orchestrator for the Jena staining setup (Fairi
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 dependencies = [
-    "arkitekt[rekuest,mikro]>=18.3.0",
-    "fakts>=6.5.0",
+    # The Arkitekt family moves together: one tested set for every stainSTORM app, bumped together.
+    "arkitekt[rekuest,mikro]==19.0.1",
+    "arkitekt-runtime==11.0.0",
+    "arkitekt-spec==14.1.0",
+    "rekuest==19.1.0",
+    "mikro==15.0.0",
+    "fakts==6.8.2",
     "pyyaml>=6",
 ]
 

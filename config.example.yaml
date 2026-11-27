@@ -7,8 +7,8 @@ app: stainstorm_orchestrator_jena   # Arkitekt app identifier for this orchestra
 # Target Arkitekt app identifiers of the connected robot & microscope apps
 # (Check http://<pi>/fairino/, http://<pi>/opentrons/ -> "app:" in their config.yaml,
 # and ImSwitch Arkitekt panel -> appName slug, e.g. "imswitch" or "frame-fork")
-fairino_app: fairinogale
-opentrons_app: ot2windy
+fairino_app: arkirino
+opentrons_app: ot2
 microscope_app: imswitch
 
 # Jena layout station names as configured in fairinogale/config.yaml
